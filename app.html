@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgriHibalo Q&amp;A — Community Feed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/css/shared.css"/>
+  <link rel="stylesheet" href="assets/css/app.css"/>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursor-glow"></div>
+
+<div class="loader" id="loader">
+  <div class="loader-inner"><div class="loader-ring"></div><span class="loader-icon">🌿</span></div>
+  <p class="loader-brand">AgriHibalo</p>
+  <p class="loader-sub">Loading community…</p>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="notif-overlay" id="notif-overlay" onclick="closeNotif()"></div>
+<div class="notif-panel" id="notif-panel" aria-hidden="true">
+  <div class="notif-head"><h3>Notifications</h3><button class="notif-clear" onclick="clearNotifs()">Mark all read</button></div>
+  <div class="notif-list" id="notif-list"><div class="notif-empty">No notifications yet.</div></div>
+</div>
+
+<!-- NAVBAR -->
+<header class="navbar" id="navbar">
+  <div class="nav-wrap">
+    <a class="brand" href="index.html">
+      <div class="brand-logo">
+        <img src="assets/assets/logo.png" alt="AgriHibalo"/>
+      </div>
+      <div class="brand-txt"><span class="brand-name">AgriHibalo</span><span class="brand-tag">Q&amp;A Community</span></div>
+    </a>
+
+    <div class="nsearch">
+      <svg class="si" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input type="text" id="srch" placeholder="Search questions…" oninput="liveSearch()" autocomplete="off"/>
+      <div class="srch-drop" id="srch-drop"></div>
+    </div>
+
+    <nav class="nav-links">
+      <a class="nl" href="index.html">Home</a>
+      <a class="nl active" id="nl-feed"        onclick="gotoPage('feed')">Q&amp;A Feed</a>
+      <a class="nl"        id="nl-leaderboard" onclick="gotoPage('leaderboard')">Leaderboard</a>
+      <a class="nl"        id="nl-about"       onclick="gotoPage('about')">About</a>
+    </nav>
+
+    <div class="nav-end">
+      <button class="notif-btn" id="notif-btn" onclick="toggleNotif()" style="display:none" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+      </button>
+      <div class="user-pill" id="user-pill" style="display:none" onclick="gotoPage('profile')" role="button" tabindex="0">
+        <div class="pill-av" id="pill-av">AN</div>
+        <div class="pill-info"><span id="pill-name">User</span><span class="pill-title" id="pill-title">🌱 Seedling</span></div>
+        <span class="pill-pts" id="pill-pts">0 pts</span>
+      </div>
+      <button class="btn-ghost-sm" id="btn-signin" onclick="gotoPage('login')">Sign In</button>
+      <button class="btn-ask-sm" onclick="gotoPage('ask')">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Ask
+      </button>
+      <button class="btn-admin-sm" id="btn-admin" onclick="gotoPage('admin')" style="display:none">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>Admin
+      </button>
+    </div>
+    <button class="burger" id="burger" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mob-nav" id="mob-nav">
+    <a href="index.html">Home</a>
+    <a onclick="gotoPage('feed');toggleMob()">Q&amp;A Feed</a>
+    <a onclick="gotoPage('ask');toggleMob()">Ask a Question</a>
+    <a onclick="gotoPage('leaderboard');toggleMob()">Leaderboard</a>
+    <a onclick="gotoPage('about');toggleMob()">About</a>
+    <a onclick="gotoPage('login');toggleMob()">Sign In</a>
+  </div>
+</header>
+
+<main id="root">
+
+<!-- ═══════ Q&A FEED ═══════ -->
+<div id="pg-feed" class="page active">
+  <div class="domain-bar" id="domain-bar">
+    <div class="domain-inner">
+      <button class="domain-tab active" id="dt-all"    onclick="setDomain('all',this)">📚 All</button>
+      <button class="domain-tab"        id="dt-farm"   onclick="setDomain('farm',this)">🌾 Farming</button>
+      <button class="domain-tab"        id="dt-animal" onclick="setDomain('animal',this)">🐄 Animal Science</button>
+    </div>
+  </div>
+  <div class="topics-bar" id="topics-bar"><div class="topics-inner" id="topics-inner"></div></div>
+
+  <div class="feed-wrap">
+    <div class="feed-col">
+      <div class="feed-head">
+        <h2 class="feed-title">Community Questions</h2>
+        <div class="feed-head-right">
+          <span class="feed-cnt" id="feed-cnt">0 questions</span>
+          <select class="sort-sel" id="sort-sel" onchange="renderFeed()">
+            <option value="newest">Newest</option>
+            <option value="votes">Most Voted</option>
+            <option value="unanswered">Unanswered</option>
+          </select>
+        </div>
+      </div>
+      <div id="feed" role="list" aria-live="polite">
+        <div class="empty-st" id="empty-st">
+          <div class="es-art"><svg viewBox="0 0 120 100" fill="none"><ellipse cx="60" cy="88" rx="44" ry="7" fill="#e8f4ec" opacity=".6"/><rect x="28" y="18" width="64" height="60" rx="10" fill="#e8f4ec"/><rect x="38" y="30" width="44" height="5" rx="2.5" fill="#0f7436" opacity=".3"/><rect x="38" y="42" width="32" height="5" rx="2.5" fill="#0f7436" opacity=".2"/><rect x="38" y="54" width="40" height="5" rx="2.5" fill="#0f7436" opacity=".15"/><circle cx="60" cy="18" r="15" fill="#0f7436"/><text x="60" y="24" text-anchor="middle" fill="white" font-size="16" font-weight="bold">?</text></svg></div>
+          <h3>No questions yet</h3><p>Be the first to start the conversation!</p>
+          <button class="btn-primary" onclick="gotoPage('ask')">Ask First Question</button>
+        </div>
+      </div>
+    </div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-card sb-onboard" id="sb-onboard">
+        <div class="sb-onboard-head">👋 Welcome to AgriHibalo!</div>
+        <div class="onboard-steps">
+          <div class="ob-step done" id="ob1"><span class="ob-num">1</span><span>Browse questions</span></div>
+          <div class="ob-step" id="ob2"><span class="ob-num">2</span><span>Create an account</span></div>
+          <div class="ob-step" id="ob3"><span class="ob-num">3</span><span>Ask your first question</span></div>
+          <div class="ob-step" id="ob4"><span class="ob-num">4</span><span>Answer &amp; earn points</span></div>
+        </div>
+      </div>
+      <div class="sb-card">
+        <div class="sb-head"><span>🏆</span><h3>Top Contributors</h3></div>
+        <div id="sb-lb"></div>
+        <button class="sb-more-btn" onclick="gotoPage('leaderboard')">View full leaderboard →</button>
+      </div>
+      <div class="sb-card">
+        <div class="sb-head"><span>🗺️</span><h3>Our Domains</h3></div>
+        <div class="domain-guide">
+          <div class="dg-item"><span>🌾</span><div><strong>Farming</strong><p>Soil, crops, irrigation, pests</p></div></div>
+          <div class="dg-item"><span>🐄</span><div><strong>Animal Science</strong><p>Livestock, poultry, veterinary</p></div></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════ QUESTION DETAIL ═══════ -->
+<div id="pg-question" class="page">
+  <div class="pshell qd-shell">
+    <button class="back-btn" onclick="goBackToFeed()">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8l5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to Feed
+    </button>
+    <div class="qd-layout">
+      <div class="qd-main">
+        <div class="qd-card" id="qd-card"></div>
+        <div class="qd-answers-section">
+          <div class="qd-ans-header">
+            <h3>Answers <span class="qd-ans-count" id="qd-ans-count">0</span></h3>
+            <span class="qd-best-note" id="qd-best-note" style="display:none">✅ Best Answer marked</span>
+          </div>
+          <div id="qd-ans-list"></div>
+          <div class="qd-write-ans" id="qd-write-ans">
+            <div class="qda-header">
+              <div class="qda-av" id="qda-av">?</div>
+              <span id="qda-name">Sign in to answer</span>
+            </div>
+            <div class="qda-body">
+              <textarea id="qd-ans-input" class="qda-textarea" placeholder="Write your answer here. Be specific and practical — the community depends on real experience." rows="4"></textarea>
+              <div class="qda-actions">
+                <span class="qda-tip">Tip: Answers with practical steps get more upvotes.</span>
+                <button class="btn-primary btn-post-ans" onclick="submitQDAnswer()">Post Answer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="qd-sidebar">
+        <div class="sb-card qd-meta-card" id="qd-meta-card"></div>
+        <div class="sb-card">
+          <div class="sb-head"><span>💡</span><h3>Tips for a good answer</h3></div>
+          <ul class="tips-list">
+            <li>Mention the specific crop, species, or animal</li>
+            <li>Provide step-by-step guidance if possible</li>
+            <li>Share from personal experience when you can</li>
+            <li>Include safe dosage or application rates</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ASK ═══════ -->
+<div id="pg-ask" class="page">
+  <div class="pshell">
+    <button class="back-btn" onclick="gotoPage('feed')"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8l5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to Feed</button>
+    <div class="ask-layout">
+      <div class="ask-main">
+        <div class="ask-hd"><h1>Ask a Question</h1><p>Share your challenge clearly — the community is here to help.</p></div>
+        <form class="ask-form" onsubmit="submitQ(event)" novalidate>
+          <div class="field"><label class="fl" for="qt">Title <span class="req">*</span></label><div class="iw"><input type="text" id="qt" class="fi" maxlength="150" placeholder="e.g. Why are my rice leaves turning yellow?" autocomplete="off"/><span class="fbar"></span></div><span class="fh">A specific title gets faster answers.</span></div>
+          <div class="field-row">
+            <div class="field f1"><label class="fl" for="qdom">Domain <span class="req">*</span></label><div class="sw"><select id="qdom" class="fi fsel" onchange="updateCatOptions()"><option value="farm">🌾 Farming</option><option value="animal">🐄 Animal Science</option></select><svg class="sa" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+            <div class="field f1"><label class="fl" for="qcat">Category <span class="req">*</span></label><div class="sw"><select id="qcat" class="fi fsel"></select><svg class="sa" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+          </div>
+          <div class="field"><label class="fl">Tags <span class="fopt">(press Enter or comma, max 5)</span></label><div class="tag-input-wrap" id="tag-wrap"><div class="tag-chips" id="tag-chips"></div><input type="text" id="tag-in" class="tag-in" placeholder="e.g. rice, disease, fertilizer" maxlength="30"/></div></div>
+          <div class="field">
+              <label class="fl" for="q-bounty">Points to Offer <span class="req">*</span></label>
+              <div class="bounty-input-wrap">
+                <input type="range" id="q-bounty" class="bounty-slider" min="5" max="10" value="5" oninput="updateBountyDisplay(this.value)"/>
+                <div class="bounty-display">
+                  <span class="bounty-val" id="bounty-val">5</span>
+                  <span class="bounty-unit">pts</span>
+                </div>
+              </div>
+              <div class="bounty-hint-row">
+                <span class="fh">Points deducted from your balance when posted. Each answerer earns 50%. Best Answer gets the remainder + bonus.</span>
+                <span class="bounty-balance fh">Your balance: <strong id="ask-balance">?</strong> pts</span>
+              </div>
+            </div>
+            <div class="field"><label class="fl" for="qb">Details <span class="req">*</span></label><div class="iw"><textarea id="qb" class="fi fta" maxlength="1000" placeholder="What crop/species/animal? When did it start? What have you tried?"></textarea><span class="fbar"></span></div><div class="field-foot"><span class="fh">More detail = better answers.</span><span class="cct" id="cct">0 / 1000</span></div></div>
+          <div class="field"><label class="fl">Photo <span class="fopt">(optional)</span></label><label class="upload-z" id="upz" for="qimg" tabindex="0"><input type="file" id="qimg" accept="image/*" onchange="previewImg(event)"/><div id="up-idle" class="up-idle"><svg viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#e8f4ec"/><path d="M20 12v16M12 20h16" stroke="#0f7436" stroke-width="2.5" stroke-linecap="round"/></svg><span class="up-main">Click or drag a photo here</span><span class="up-sub">JPG, PNG — max 5 MB</span></div><img id="img-prev" src="" alt="" style="display:none"/></label><button type="button" class="rm-img" id="rm-img" style="display:none" onclick="rmImg()">✕ Remove photo</button></div>
+          <div class="form-ft"><button type="button" class="btn-ghost" onclick="gotoPage('feed')">Cancel</button><button type="submit" class="btn-primary btn-post">Post Question <svg viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        </form>
+      </div>
+      <div class="ask-side">
+        <div class="tips-card"><h3>✅ Tips for a great question</h3><ul><li>Mention the specific crop or animal</li><li>Describe symptoms clearly</li><li>Include location or season if relevant</li><li>State what you've already tried</li><li>Attach a photo if possible</li></ul></div>
+        <div class="tips-card tips-warn"><h3>Community rules</h3><ul><li>No spam or promotional content</li><li>Be respectful to all members</li><li>Only post agriculture-related questions</li><li>Search before posting</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PROFILE ═══════ -->
+<div id="pg-profile" class="page">
+  <div class="pshell profile-pshell">
+    <button class="back-btn" onclick="activeProfile=null;gotoPage('feed')"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8l5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+
+    <!-- Cover banner -->
+    <div class="prof-cover" id="prof-cover">
+      <div class="prof-cover-overlay"></div>
+    </div>
+
+    <!-- Identity row -->
+    <div class="prof-identity-row">
+      <div class="prof-av-ring-wrap">
+        <div class="prof-av-ring">
+          <svg class="xp-ring-svg" viewBox="0 0 100 100">
+            <circle class="xp-track" cx="50" cy="50" r="44"/>
+            <circle class="xp-fill"  cx="50" cy="50" r="44" id="xp-circle"/>
+          </svg>
+          <div class="prof-av-inner" id="prof-av">AN</div>
+        </div>
+        <div class="prof-title-badge" id="prof-title-badge">🌱 Seedling</div>
+      </div>
+      <div class="prof-identity-info">
+        <h1 class="prof-name" id="prof-name">Anonymous</h1>
+        <p class="prof-role-txt" id="prof-role-txt">Agriculture Student</p>
+        <div class="prof-xp-wrap">
+          <div class="prof-xp-label"><span id="xp-cur">0</span> / <span id="xp-next">50</span> pts to next title</div>
+          <div class="prof-xp-bar"><div class="prof-xp-fill" id="prof-xp-fill"></div></div>
+        </div>
+      </div>
+      <div class="prof-actions-col">
+        <button class="btn-ghost" onclick="gotoPage('ask')">Ask a Question</button>
+        <button class="btn-signout" onclick="signOut()">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="15" height="15"><path d="M13 15l4-5-4-5M17 10H7"/><path d="M9 19H4a1 1 0 01-1-1V2a1 1 0 011-1h5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sign Out
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="prof-stats-strip">
+      <div class="pss-item"><span class="pss-val" id="ps-pts">0</span><span class="pss-lbl">Points</span></div>
+      <div class="pss-div"></div>
+      <div class="pss-item"><span class="pss-val" id="ps-q">0</span><span class="pss-lbl">Questions</span></div>
+      <div class="pss-div"></div>
+      <div class="pss-item"><span class="pss-val" id="ps-a">0</span><span class="pss-lbl">Answers</span></div>
+      <div class="pss-div"></div>
+      <div class="pss-item"><span class="pss-val" id="ps-best">0</span><span class="pss-lbl">Best Answers</span></div>
+      <div class="pss-div"></div>
+      <div class="pss-item"><span class="pss-val" id="ps-votes">0</span><span class="pss-lbl">Votes Earned</span></div>
+    </div>
+
+    <!-- Body -->
+    <div class="prof-body-grid">
+      <div class="prof-left-col">
+        <div class="prof-section-card">
+          <h3 class="prof-section-title">Badges</h3>
+          <div class="badges-grid" id="badges-grid"></div>
+        </div>
+        <div class="prof-section-card">
+          <h3 class="prof-section-title">Title Progression</h3>
+          <div class="prof-title-ladder" id="prof-title-ladder"></div>
+        </div>
+      </div>
+      <div class="prof-right-col">
+        <div class="prof-section-card prof-activity-card">
+          <div class="act-tabs">
+            <button class="act-tab active" onclick="switchActTab('questions',this)">My Questions</button>
+            <button class="act-tab"        onclick="switchActTab('answers',this)">My Answers</button>
+          </div>
+          <div id="act-questions" class="act-panel"></div>
+          <div id="act-answers"   class="act-panel" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ LEADERBOARD ═══════ -->
+<div id="pg-leaderboard" class="page">
+  <div class="pshell">
+    <button class="back-btn" onclick="gotoPage('feed')"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8l5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <div class="lb-hero"><h1>Leaderboard</h1><p>Top contributors who grow the AgriHibalo community.</p></div>
+    <div class="lb-podium" id="lb-podium"></div>
+    <div class="lb-table"  id="lb-table"></div>
+  </div>
+</div>
+
+<!-- ═══════ ABOUT ═══════ -->
+<div id="pg-about" class="page">
+  <div class="pshell">
+    <button class="back-btn" onclick="gotoPage('feed')"><svg viewBox="0 0 16 16" fill="none"><path d="M10 13L5 8l5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+    <div class="about-hero"><h1>About <span class="green">AgriHibalo</span></h1><p>A community-based platform connecting students and practitioners through knowledge sharing.</p></div>
+    <div class="about-grid">
+      <div class="ab-card ab-wide"><div class="ab-n">01</div><h2>What is AgriHibalo?</h2><p>AgriHibalo is a Brainly-inspired Q&amp;A platform built for agriculture and animal science in the Philippines. Students post farming and livestock questions; experienced farmers and practitioners answer. Every helpful contribution earns points, building a culture of collaborative learning.</p></div>
+      <div class="ab-card"><div class="ab-n">02</div><h2>Two Domains</h2><ul><li>🌾 <strong>Farming</strong> — soil, crops, irrigation, pest control, fertilizers, harvest</li><li>🐄 <strong>Animal Science</strong> — livestock, poultry, veterinary advice, feeds, breeding</li></ul></div>
+      <div class="ab-card"><div class="ab-n">03</div><h2>How it works</h2><ol><li>Post your question with a photo</li><li>Get answers from verified practitioners</li><li>Mark the best answer</li><li>Earn points &amp; climb the leaderboard</li></ol></div>
+      <div class="ab-card ab-wide team-card"><div class="ab-n">04</div><h2>Proposed by</h2><div class="team-row"><div class="tm"><div class="tm-av">KG</div><span>Karl Andrei E. Guardapies</span></div><div class="tm"><div class="tm-av">RR</div><span>Roylyn James C. Robante</span></div><div class="tm"><div class="tm-av">JT</div><span>Justin C. Timban</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ LOGIN ═══════ -->
+<div id="pg-login" class="page">
+  <div class="auth-shell">
+    <div class="auth-left">
+      <div class="al-brand"><div class="brand-logo"><img src="assets/assets/logo.png" alt=""/></div><div class="brand-txt"><span class="brand-name">AgriHibalo</span><span class="brand-tag">Q&amp;A Community</span></div></div>
+      <h2 class="al-head">Learn from the field.<br>Grow together.</h2>
+      <p class="al-desc">The community Q&amp;A platform for agriculture and animal science.</p>
+      <div class="al-perks">
+        <div class="perk"><span>🌾</span><span>Farming &amp; Animal Science</span></div>
+        <div class="perk"><span>⭐</span><span>Earn points for helpful answers</span></div>
+        <div class="perk"><span>🌟</span><span>Unlock titles — Seedling to Master Grower</span></div>
+        <div class="perk"><span>✅</span><span>Mark Best Answers — earn points back when you do</span></div>
+        <div class="perk"><span>🔔</span><span>Get notified when your question is answered</span></div>
+      </div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="atab active" id="at-in"  onclick="switchAuth('login')">Sign In</button>
+        <button class="atab"        id="at-reg" onclick="switchAuth('reg')">Register</button>
+        <div class="at-slider" id="at-slider"></div>
+      </div>
+      <form id="f-login" onsubmit="doLogin(event)" novalidate>
+        <div class="field"><label class="fl" for="lu">Username</label><div class="iw"><input type="text" id="lu" class="fi" placeholder="Enter username" autocomplete="username"/><span class="fbar"></span></div></div>
+        <div class="field"><label class="fl" for="lp">Password</label><div class="iw pw-wrap"><input type="password" id="lp" class="fi" placeholder="Enter password" autocomplete="current-password"/><button type="button" class="eye" onclick="toggleEye('lp',this)"><svg class="eo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><svg class="ec" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></button><span class="fbar"></span></div></div>
+        <div class="field"><label class="fl">Role</label><div class="role-grid"><label class="rc"><input type="radio" name="lr" value="student" checked/><span><span class="rc-face">🎓</span><span class="rc-nm">Student</span><div class="rc-ck">✓</div></span></label><label class="rc"><input type="radio" name="lr" value="farmer"/><span><span class="rc-face">👨‍🌾</span><span class="rc-nm">Farmer</span><div class="rc-ck">✓</div></span></label></div></div>
+        <p class="admin-hint">Admin? Username: <strong>admin</strong> · Password: <strong>admin123</strong></p>
+        <button type="submit" class="btn-auth">Sign In</button>
+      </form>
+      <form id="f-reg" onsubmit="doRegister(event)" novalidate style="display:none">
+        <div class="field"><label class="fl" for="rn">Full Name</label><div class="iw"><input type="text" id="rn" class="fi" placeholder="Juan dela Cruz" autocomplete="name"/><span class="fbar"></span></div></div>
+        <div class="field"><label class="fl" for="ru">Username</label><div class="iw"><input type="text" id="ru" class="fi" placeholder="juan_farmer" autocomplete="username"/><span class="fbar"></span></div></div>
+        <div class="field"><label class="fl" for="rp">Password</label><div class="iw pw-wrap"><input type="password" id="rp" class="fi" placeholder="Min. 6 characters" autocomplete="new-password"/><button type="button" class="eye" onclick="toggleEye('rp',this)"><svg class="eo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><svg class="ec" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></button><span class="fbar"></span></div></div>
+        <div class="field"><label class="fl">Role</label><div class="role-grid"><label class="rc"><input type="radio" name="rr" value="student" checked/><span><span class="rc-face">🎓</span><span class="rc-nm">Student</span><div class="rc-ck">✓</div></span></label><label class="rc"><input type="radio" name="rr" value="farmer"/><span><span class="rc-face">👨‍🌾</span><span class="rc-nm">Farmer</span><div class="rc-ck">✓</div></span></label></div></div>
+        <button type="submit" class="btn-auth">Create Account</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ADMIN ═══════ -->
+<div id="pg-admin" class="page">
+  <div class="admin-shell">
+    <aside class="admin-nav">
+      <div class="adm-brand">
+        <div class="adm-brand-icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg></div>
+        <div><div class="adm-title">Admin Panel</div><div class="adm-sub">AgriHibalo</div></div>
+      </div>
+      <nav class="adm-nav-links">
+        <a class="adm-lnk active" id="aln-overview"  onclick="switchAdminTab('overview',this)"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/></svg>Overview</a>
+        <a class="adm-lnk" id="aln-questions" onclick="switchAdminTab('questions',this)"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>Questions</a>
+        <a class="adm-lnk" id="aln-users"     onclick="switchAdminTab('users',this)"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>Users</a>
+        <a class="adm-lnk" id="aln-reports"   onclick="switchAdminTab('reports',this)"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 7l2.55 2.4A1 1 0 0116 11H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"/></svg>Reports <span class="adm-badge" id="report-badge">0</span></a>
+        <a class="adm-lnk" id="aln-activity"  onclick="switchAdminTab('activity',this)"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clip-rule="evenodd"/></svg>Activity Log</a>
+      </nav>
+      <button class="adm-logout" onclick="adminLogout()">← Exit Admin</button>
+    </aside>
+    <div class="admin-content">
+      <div class="adm-tab active" id="admt-overview"><div class="adm-topbar"><h1>Dashboard Overview</h1><span class="adm-date" id="adm-date"></span></div><div class="stat-cards" id="adm-stats"></div><div class="adm-two-col"><div class="adm-card"><h3>Recent Questions</h3><div id="adm-recent-q"></div></div><div class="adm-card"><h3>Domain Distribution</h3><div class="donut-wrap"><canvas id="donut-canvas" width="180" height="180"></canvas><div class="donut-legend" id="donut-legend"></div></div></div></div></div>
+      <div class="adm-tab" id="admt-questions"><div class="adm-topbar"><h1>Manage Questions</h1></div><div class="adm-toolbar"><input type="text" class="adm-search" placeholder="Search questions…" oninput="adminSearchQ(this.value)"/></div><div class="adm-table-wrap"><table class="adm-table" id="adm-q-table"><thead><tr><th>Title</th><th>Domain</th><th>Author</th><th>Answers</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adm-q-body"></tbody></table></div></div>
+      <div class="adm-tab" id="admt-users"><div class="adm-topbar"><h1>Manage Users</h1></div><div class="adm-toolbar"><input type="text" class="adm-search" placeholder="Search users…" oninput="adminSearchU(this.value)"/></div><div class="adm-table-wrap"><table class="adm-table" id="adm-u-table"><thead><tr><th>User</th><th>Role</th><th>Title</th><th>Questions</th><th>Answers</th><th>Points</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adm-u-body"></tbody></table></div></div>
+      <div class="adm-tab" id="admt-reports"><div class="adm-topbar"><h1>Reported Content</h1></div><div id="adm-reports-list"></div></div>
+      <div class="adm-tab" id="admt-activity"><div class="adm-topbar"><h1>Activity Log</h1></div><div class="act-log" id="act-log"></div></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-wrap">
+    <div class="footer-brand"><span class="brand-name" style="color:var(--o)">AgriHibalo</span><span class="fs">·</span><span>Agricultural Knowledge Community</span></div>
+    <p class="footer-copy">© 2026 AgriHibalo · Proposed by Guardapies, Robante &amp; Timban</p>
+  </div>
+</footer>
+
+<div class="toast-r" role="status" aria-live="polite"><div class="toast" id="toast"></div></div>
+<div id="rpl-root"></div>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

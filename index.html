@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgriHibalo — Agricultural Knowledge Community</title>
+  <meta name="description" content="AgriHibalo connects students with experienced farmers and agricultural professionals. Ask questions, share knowledge, and grow together."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/css/shared.css"/>
+  <link rel="stylesheet" href="assets/css/landing.css"/>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursor-glow"></div>
+
+<div class="loader" id="loader">
+  <div class="loader-inner"><div class="loader-ring"></div><span class="loader-icon">🌿</span></div>
+  <p class="loader-brand">AgriHibalo</p>
+  <p class="loader-sub">Agricultural Knowledge Community</p>
+</div>
+
+<!-- NAVBAR -->
+<header class="navbar" id="navbar">
+  <div class="nav-wrap">
+    <a class="brand" href="index.html">
+      <div class="brand-logo">
+        <img src="assets/assets/logo.png" alt="AgriHibalo"/>
+      </div>
+      <div class="brand-txt"><span class="brand-name">AgriHibalo</span><span class="brand-tag">Q&amp;A Community</span></div>
+    </a>
+
+    <nav class="nav-links">
+      <a class="nl active" href="index.html">Home</a>
+      <a class="nl" href="app.html">Q&amp;A Feed</a>
+      <a class="nl" href="app.html" onclick="sessionStorage.setItem('goto','leaderboard')">Leaderboard</a>
+      <a class="nl" href="app.html" onclick="sessionStorage.setItem('goto','about')">About</a>
+    </nav>
+
+    <div class="nav-end">
+      <a class="btn-ghost-sm" href="app.html" onclick="sessionStorage.setItem('goto','login')">Sign In</a>
+      <a class="btn-ask-sm"   href="app.html">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Ask a Question
+      </a>
+    </div>
+
+    <button class="burger" id="burger" onclick="toggleBurger()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mob-nav" id="mob-nav">
+    <a href="index.html">Home</a>
+    <a href="app.html">Q&amp;A Feed</a>
+    <a href="app.html" onclick="sessionStorage.setItem('goto','ask')">Ask a Question</a>
+    <a href="app.html" onclick="sessionStorage.setItem('goto','leaderboard')">Leaderboard</a>
+    <a href="app.html" onclick="sessionStorage.setItem('goto','about')">About</a>
+    <a href="app.html" onclick="sessionStorage.setItem('goto','login')">Sign In</a>
+  </div>
+</header>
+
+<main id="root">
+
+  <!-- HERO -->
+  <section class="lp-hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="lp-hero-inner">
+      <div class="lp-content">
+        <div class="lp-badge" data-r="0"><span class="hb-dot"></span>Agriculture · Animal Science</div>
+        <h1 class="lp-h1" data-r="1">
+          Get answers to your<br>
+          <em class="hero-em">farming questions</em><br>
+          from real experts.
+        </h1>
+        <p class="lp-lead" data-r="2">
+          AgriHibalo connects students with experienced farmers and agricultural professionals.
+          Ask questions, share practical knowledge, and grow together —
+          the community Q&amp;A platform built for Philippine agriculture.
+        </p>
+        <div class="lp-actions" data-r="3">
+          <a class="btn-hero-p" href="app.html">
+            Explore Questions
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn-hero-g" href="app.html" onclick="sessionStorage.setItem('goto','login')">Join for Free</a>
+        </div>
+        <div class="lp-mini-stats" data-r="4">
+          <div class="ms"><span class="ms-n" id="lp-q">5</span><span class="ms-l">Questions</span></div>
+          <div class="ms-div"></div>
+          <div class="ms"><span class="ms-n" id="lp-a">8</span><span class="ms-l">Answers</span></div>
+          <div class="ms-div"></div>
+          <div class="ms"><span class="ms-n">12</span><span class="ms-l">Members</span></div>
+          <div class="ms-div"></div>
+          <div class="ms"><span class="ms-n">2</span><span class="ms-l">Domains</span></div>
+        </div>
+      </div>
+
+      <div class="lp-visual" aria-hidden="true">
+        <div class="lp-card-stack">
+          <div class="lp-qcard lv1">
+            <div class="lv-domain">🌾 Farming</div>
+            <div class="lv-q">Why are my rice leaves turning yellow at the tips?</div>
+            <div class="lv-meta">2 answers · Best marked ✓</div>
+          </div>
+          <div class="lp-qcard lv2">
+            <div class="lv-domain">🐄 Animal Science</div>
+            <div class="lv-q">How often should I deworm my goats?</div>
+            <div class="lv-meta">1 answer · Best marked ✓</div>
+          </div>
+          <div class="lp-qcard lv3">
+            <div class="lv-domain">🐄 Animal Science</div>
+            <div class="lv-q">How to identify foot-and-mouth disease in cattle early?</div>
+            <div class="lv-meta">1 answer · Expert answered</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="lp-how">
+    <div class="lp-section-inner">
+      <p class="lp-section-label">How it works</p>
+      <h2 class="lp-section-title">Three steps to better farming knowledge</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <div class="how-num">01</div>
+          <div class="how-icon-wrap how-i1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+          </div>
+          <h3>Ask Your Question</h3>
+          <p>Post your question and offer 5–10 pts from your balance as a bounty. Higher bounties attract faster, more detailed answers.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-num">02</div>
+          <div class="how-icon-wrap how-i2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h3>Get Expert Answers</h3>
+          <p>Experienced farmers, graduates, and practitioners respond with verified, practical knowledge you can immediately apply.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-num">03</div>
+          <div class="how-icon-wrap how-i3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <h3>Earn &amp; Grow</h3>
+          <p>Answering questions earns you points from the asker's bounty. Pick up the Best Answer designation for a bonus. Unlock titles — Seedling, Sprout, Planter, Cultivator, Agronomist, Master Grower.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOMAINS -->
+  <section class="lp-domains">
+    <div class="lp-section-inner">
+      <p class="lp-section-label">What we cover</p>
+      <h2 class="lp-section-title">Two domains, one community</h2>
+      <div class="domain-cards">
+        <div class="dc dc-farm" onclick="goToFeed('farm')">
+          <div class="dc-icon">🌾</div>
+          <h3>Farming</h3>
+          <p>Soil science, crop management, irrigation, pest control, fertilizers, and post-harvest handling.</p>
+          <span class="dc-cta">Browse Farming Q&amp;A →</span>
+        </div>
+        <div class="dc dc-animal" onclick="goToFeed('animal')">
+          <div class="dc-icon">🐄</div>
+          <h3>Animal Science</h3>
+          <p>Livestock care, poultry management, veterinary advice, animal nutrition, breeding, and housing.</p>
+          <span class="dc-cta">Browse Animal Science Q&amp;A →</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TITLE PROGRESSION -->
+  <section class="lp-titles">
+    <div class="lp-section-inner lp-titles-inner">
+      <div class="lp-titles-text">
+        <p class="lp-section-label">Earn your title</p>
+        <h2 class="lp-section-title" style="margin-bottom:0">Six titles.<br>One real grind.</h2>
+        <p class="lp-titles-desc">Every answer you contribute earns points. As your knowledge grows, you unlock titles that reflect your real expertise — a progression system built around agriculture.</p>
+        <a class="btn-hero-p" href="app.html" onclick="sessionStorage.setItem('goto','login')" style="margin-top:28px;display:inline-flex">
+          Start earning today
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="title-ladder">
+        <div class="tl-item tl-active"><div class="tl-badge tb-0">🌱</div><div class="tl-info"><span class="tl-name">Seedling</span><span class="tl-pts">50 pts to unlock</span></div><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
+        <div class="tl-item"><div class="tl-badge tb-1">🌿</div><div class="tl-info"><span class="tl-name">Sprout</span><span class="tl-pts">100 pts</span></div><div class="tl-bar"><div class="tl-fill" style="width:60%"></div></div></div>
+        <div class="tl-item tl-mystery"><div class="tl-badge tl-hidden-badge">?</div><div class="tl-info"><span class="tl-name tl-blur">Planter</span></div><div class="tl-bar tl-bar-hidden"></div></div>
+        <div class="tl-item tl-mystery"><div class="tl-badge tl-hidden-badge">?</div><div class="tl-info"><span class="tl-name tl-blur">Cultivator</span></div><div class="tl-bar tl-bar-hidden"></div></div>
+        <div class="tl-item tl-mystery tl-locked"><div class="tl-badge tl-hidden-badge">?</div><div class="tl-info"><span class="tl-name tl-blur">Agronomist</span></div><div class="tl-bar tl-bar-hidden"></div></div>
+        <div class="tl-item tl-mystery tl-locked"><div class="tl-badge tl-hidden-badge">?</div><div class="tl-info"><span class="tl-name tl-blur">Master Grower</span></div><div class="tl-bar tl-bar-hidden"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BOTTOM -->
+  <section class="lp-cta">
+    <div class="lp-cta-inner">
+      <h2>Ready to grow your agricultural knowledge?</h2>
+      <p>Join AgriHibalo — completely free for students and farmers.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
+        <a class="btn-cta-primary" href="app.html" onclick="sessionStorage.setItem('goto','login')">Create Free Account</a>
+        <a class="btn-cta-ghost"   href="app.html">Browse Questions First</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-wrap">
+    <div class="footer-brand"><span class="brand-name" style="color:var(--o)">AgriHibalo</span><span class="fs">·</span><span>Agricultural Knowledge Community</span></div>
+    <p class="footer-copy">© 2026 AgriHibalo · Proposed by Guardapies, Robante &amp; Timban</p>
+  </div>
+</footer>
+
+<div class="toast-r" role="status"><div class="toast" id="toast"></div></div>
+<div id="rpl-root"></div>
+<script src="assets/js/landing.js"></script>
+</body>
+</html>
